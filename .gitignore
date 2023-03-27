@@ -29,7 +29,6 @@ Assets/Resources/env.txt*
 *.csproj.meta
 *.sln.meta
 *.csproj.meta
-out/
 Assets/Firebase/Plugins/link.xml_DISABLED
 Assets/Firebase/Plugins/link.xml_DISABLED.meta
 Assets/Resources/manifest.json
