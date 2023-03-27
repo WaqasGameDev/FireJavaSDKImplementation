@@ -23,8 +23,8 @@ mergeInto(LibraryManager.library, {
     },
 	
     LogEventWithParameter: function(eventName, eventParameter) {
-        var event_name = Pointer_stringify(eventName);
-        var event_param = JSON.parse(Pointer_stringify(eventParameter));
+        var event_name = UTF8ToString(eventName);
+        var event_param = JSON.parse(UTF8ToString(eventParameter));
 		
         logEvent(analytics, event_name, event_param);
     }
