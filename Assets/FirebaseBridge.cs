@@ -21,6 +21,9 @@ public class FirebaseBridge : MonoBehaviour
     [DllImport("__Internal")]
     public static extern void LogEventWithParameter(string eventName, string parameters);
 
+    [DllImport("__Internal")]
+    public static extern void GetToken(string vapid);
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +43,7 @@ public class FirebaseBridge : MonoBehaviour
         SetAnalyticsCollectionEnabled(true);
         LogEvent("TestEvent107Plain");
         LogEventWithParameter("TestEvent107WithParameter", serList);
+        GetToken("BGksMw-9L4cw90taF5wi_4IOKlS33c4xFQlQ1imPc-5yuNw7Tc7R_538Q476tYYS9ytLi__fNb0BvbmWwOo9vtQ");
 #endif
     }
 
