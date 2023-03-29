@@ -43,7 +43,7 @@ public class FirebaseBridge : MonoBehaviour
         SetAnalyticsCollectionEnabled(true);
         LogEvent("TestEvent107Plain");
         LogEventWithParameter("TestEvent107WithParameter", serList);
-        GetToken("BGksMw-9L4cw90taF5wi_4IOKlS33c4xFQlQ1imPc-5yuNw7Tc7R_538Q476tYYS9ytLi__fNb0BvbmWwOo9vtQ");
+        GetToken("BM5ucnZ8JwnrpvQwwM80hjU6v163Uy85Mp_1u53A8MhCin53eo0CsY3MRtAcHaxLNBte9LBpv6YugmhFoVZhxDU");
 #endif
     }
 
