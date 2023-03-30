@@ -47,6 +47,12 @@ public class FirebaseBridge : MonoBehaviour
 #endif
     }
 
+    public void PrintToken(string token)
+    {
+        Debug.Log($"====Printing from inside unity===={token}");
+    }
+
+
     private string SerializeObject<T>(T objectToSerialize)
     {
         return JsonConvert.SerializeObject(objectToSerialize);

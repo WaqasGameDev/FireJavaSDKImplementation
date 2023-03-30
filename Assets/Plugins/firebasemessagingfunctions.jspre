@@ -18,6 +18,7 @@ Module.FirebaseMessagingRequestPermission = function(vapid)  {
     }).then((currentToken) => {
       if (currentToken) {
         console.log(currentToken);
+		gameInstance.SendMessage('FirebaseTest','PrintToken',currentToken);
       }
     }).catch((err) => {
       console.error('An error occurred while retrieving token. ', err);
