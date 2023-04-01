@@ -49,7 +49,12 @@ public class FirebaseBridge : MonoBehaviour
 
     public void PrintToken(string token)
     {
-        Debug.Log($"====Printing from inside unity===={token}");
+        Debug.Log($"====Printing Token from inside unity===={token}");
+    }
+
+    public void PrintMessage(string message)
+    {
+        Debug.Log($"====Printing Message from inside unity===={message}");
     }
 
 

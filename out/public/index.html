@@ -153,6 +153,19 @@ window.logEvent = logEvent;
 window.messaging = messaging;
 window.getToken = getToken;
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/firebase-messaging-sw.js').then(function(registration) {
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, function(err) {
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+  
+  navigator.serviceWorker.controller.postMessage('clearCache');
+}
+
+
 	</script>
 	
 
