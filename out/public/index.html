@@ -154,16 +154,25 @@ window.messaging = messaging;
 window.getToken = getToken;
 
 if ('serviceWorker' in navigator) {
+  console.log('service workers are supported');
+  let controller = null;
+
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('/firebase-messaging-sw.js').then(function(registration) {
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }, function(err) {
+      controller = registration.active;
+	  }, function(err) {
       console.log('ServiceWorker registration failed: ', err);
     });
   });
-  
-  navigator.serviceWorker.controller.postMessage('clearCache');
+
+  // add event listener for controllerchange event
+  navigator.serviceWorker.addEventListener('controllerchange', function() {
+    controller = navigator.serviceWorker.controller;
+  });
 }
+
+gameInstance.SendMessage('FirebaseTest','PrintToken',"TestToken");
 
 
 	</script>
