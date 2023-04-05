@@ -161,14 +161,6 @@ window.getToken = getToken;
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
 
       controller = registration.active;
-      if (controller) {
-        controller.postMessage({
-		unityGameInstance: gameInstance,
-          objectName: 'FirebaseTest',
-          methodName: 'PrintMessage',
-          message: 'Hello from index.html!'
-        });
-      }
     }, function(err) {
       console.log('ServiceWorker registration failed: ', err);
     });
@@ -184,12 +176,10 @@ window.getToken = getToken;
   }
   
   window.addEventListener('message', event => {
-  console.error('fetch wass triggered 5');
-  console.error("Data is : ===== "+JSON.stringify(event.data));
-  if (event.data === 'call-my-function') {
-    console.error('fetch wass triggered 6');
-	myFunction();
-  }
+    console.error("Data is : ===== "+event.data);
+      console.error('fetch wass triggered 6');
+	//myFunction();
+  
 });
 
   

@@ -19,6 +19,16 @@ const messaging = firebase.messaging();
 
 // Add an event listener to handle background messages.
 self.addEventListener('push', (event) => {
+	if(event.data == 'CallMe'){
+		console.error("Called from push");
+			  // Send a message to the main page with the payload
+  self.clients.matchAll().then(clients => {
+    clients.forEach(client => {
+      client.postMessage('SampleText');
+    });
+  });
+	}
+	
   if (event.data) {
     // Handle background message
     const message = event.data.json();
@@ -40,33 +50,6 @@ self.addEventListener('push', (event) => {
 
     self.registration.showNotification(notificationTitle, notificationOptions);
   }
-});
-
-self.addEventListener('fetch', event => {
-	console.error('fetch wass triggered 1');
-  // Use event.respondWith to intercept network requests
-  event.respondWith(
-   
-	fetch(event.request).then(response => {
-		console.error('fetch wass triggered 3');
-      // Clone the response so we can use it twice
-      const responseClone = response.clone();
-
-      // Send a message to the main page to call the function
-      self.clients.matchAll().then(clients => {
-		  console.error('fetch wass triggered 3');
-        clients.forEach(client => {
-			console.error('fetch wass triggered 4');
-          client.postMessage('call-my-function');
-        });
-      });
-
-      // Return the response as normal
-      return response;
-    }).catch(error => {
-      console.error('Fetch failed:', error);
-    })
-  );
 });
 
 
