@@ -56,15 +56,7 @@ self.messaging = messaging;
 var gameInstance = null;
 
 self.addEventListener('message', (event) => {
-	
-	if(event.data.setGameInstance == true && event.data.unityGameInstance !== null){
-		gameInstance = unityGameInstance;
-		console.error('Game instance received issssss: '+unityGameInstance);
-	}
-	else{
-		sendMessageWithDelayFunction(event.data.objectName, event.data.methodName, event.data.message)
-		;}
-	
+	sendMessageWithDelayFunction(event.data.objectName, event.data.methodName, event.data.message)
 });
 
 function sendMessageWithDelayFunction(objectName, methodName, message) {

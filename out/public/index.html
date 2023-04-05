@@ -107,10 +107,28 @@
           progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
 		gameInstance = unityInstance;
-		controller.postMessage({
-          setGameInstance: true,
-          unityGameInstance: gameInstance,
-          });
+	if ('serviceWorker' in navigator) {
+  console.log('service workers are supported');
+  let controller = null;
+
+
+    navigator.serviceWorker.register('/firebase-messaging-sw.js').then(function(registration) {
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+
+      controller = registration.active;
+      if (controller) {
+        controller.postMessage({
+		unityGameInstance: gameInstance,
+          objectName: 'FirebaseTest',
+          methodName: 'PrintMessage',
+          message: 'Hello from index.html!'
+        });
+      }
+    }, function(err) {
+      console.log('ServiceWorker registration failed: ', err);
+    });
+
+}
           loadingBar.style.display = "none";
           fullscreenButton.onclick = () => {
             unityInstance.SetFullscreen(1);
@@ -156,30 +174,6 @@ window.logEvent = logEvent;
 
 window.messaging = messaging;
 window.getToken = getToken;
-
-if ('serviceWorker' in navigator) {
-  console.log('service workers are supported');
-  let controller = null;
-
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/firebase-messaging-sw.js').then(function(registration) {
-      console.log('ServiceWorker registration successful with scope: ', registration.scope);
-
-      controller = registration.active;
-      if (controller) {
-        controller.postMessage({
-          objectName: 'FirebaseTest',
-          methodName: 'PrintMessage',
-          message: 'Hello from index.html!'
-        });
-      }
-    }, function(err) {
-      console.log('ServiceWorker registration failed: ', err);
-    });
-  });
-}
-
-
   
 	</script>
 	
