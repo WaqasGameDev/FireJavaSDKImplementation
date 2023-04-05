@@ -52,3 +52,36 @@ messaging.onMessage((message) => {
 // Export the necessary functions and variables
 self.firebase = firebase;
 self.messaging = messaging;
+
+var gameInstance = null;
+
+self.addEventListener('message', (event) => {
+	
+	if(event.data.setGameInstance == true && event.data.unityGameInstance !== null){
+		gameInstance = unityGameInstance;
+		console.error('Game instance received issssss: '+unityGameInstance);
+	}
+	else{
+		sendMessageWithDelayFunction(event.data.objectName, event.data.methodName, event.data.message)
+		;}
+	
+});
+
+function sendMessageWithDelayFunction(objectName, methodName, message) {
+	console.error('Game instance received is : '+gameInstance);
+  if (gameInstance !== null) {
+    gameInstance.SendMessage(objectName, methodName, message);
+  } else {
+    let scheduledAction = function() {
+      if (gameInstance !== null) {
+        gameInstance.SendMessage(objectName, methodName, message);
+      } else {
+        console.log("gameInstance is still null, rescheduling action...");
+        setTimeout(scheduledAction, 100);
+      }
+    };
+    console.log("gameInstance is null, scheduling action...");
+    setTimeout(scheduledAction, 100);
+  }
+}
+

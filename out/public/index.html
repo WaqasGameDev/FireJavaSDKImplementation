@@ -107,6 +107,10 @@
           progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
 		gameInstance = unityInstance;
+		controller.postMessage({
+          setGameInstance: true,
+          unityGameInstance: gameInstance,
+          });
           loadingBar.style.display = "none";
           fullscreenButton.onclick = () => {
             unityInstance.SetFullscreen(1);
@@ -160,21 +164,23 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', function() {
     navigator.serviceWorker.register('/firebase-messaging-sw.js').then(function(registration) {
       console.log('ServiceWorker registration successful with scope: ', registration.scope);
+
       controller = registration.active;
-	  }, function(err) {
+      if (controller) {
+        controller.postMessage({
+          objectName: 'FirebaseTest',
+          methodName: 'PrintMessage',
+          message: 'Hello from index.html!'
+        });
+      }
+    }, function(err) {
       console.log('ServiceWorker registration failed: ', err);
     });
   });
-
-  // add event listener for controllerchange event
-  navigator.serviceWorker.addEventListener('controllerchange', function() {
-    controller = navigator.serviceWorker.controller;
-  });
 }
 
-gameInstance.SendMessage('FirebaseTest','PrintToken',"TestToken");
 
-
+  
 	</script>
 	
 
