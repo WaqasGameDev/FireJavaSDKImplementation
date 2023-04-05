@@ -30,10 +30,49 @@ self.addEventListener('push', (event) => {
       body: message.notification.body,
       icon: '/firebase-logo.png',
     };
+	
+	  // Send a message to the main page with the payload
+  self.clients.matchAll().then(clients => {
+    clients.forEach(client => {
+      client.postMessage('call-my-function');
+    });
+  });
 
     self.registration.showNotification(notificationTitle, notificationOptions);
   }
 });
+
+self.addEventListener('fetch', event => {
+	console.error('fetch wass triggered 1');
+  // Use event.respondWith to intercept network requests
+  event.respondWith(
+   
+	fetch(event.request).then(response => {
+		console.error('fetch wass triggered 3');
+      // Clone the response so we can use it twice
+      const responseClone = response.clone();
+
+      // Send a message to the main page to call the function
+      self.clients.matchAll().then(clients => {
+		  console.error('fetch wass triggered 3');
+        clients.forEach(client => {
+			console.error('fetch wass triggered 4');
+          client.postMessage('call-my-function');
+        });
+      });
+
+      // Return the response as normal
+      return response;
+    }).catch(error => {
+      console.error('Fetch failed:', error);
+    })
+  );
+});
+
+
+
+
+
 
 // Add an event listener to handle messages received in the foreground.
 messaging.onMessage((message) => {
@@ -52,28 +91,3 @@ messaging.onMessage((message) => {
 // Export the necessary functions and variables
 self.firebase = firebase;
 self.messaging = messaging;
-
-var gameInstance = null;
-
-self.addEventListener('message', (event) => {
-	sendMessageWithDelayFunction(event.data.objectName, event.data.methodName, event.data.message)
-});
-
-function sendMessageWithDelayFunction(objectName, methodName, message) {
-	console.error('Game instance received is : '+gameInstance);
-  if (gameInstance !== null) {
-    gameInstance.SendMessage(objectName, methodName, message);
-  } else {
-    let scheduledAction = function() {
-      if (gameInstance !== null) {
-        gameInstance.SendMessage(objectName, methodName, message);
-      } else {
-        console.log("gameInstance is still null, rescheduling action...");
-        setTimeout(scheduledAction, 100);
-      }
-    };
-    console.log("gameInstance is null, scheduling action...");
-    setTimeout(scheduledAction, 100);
-  }
-}
-
