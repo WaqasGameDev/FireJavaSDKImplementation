@@ -160,6 +160,7 @@ var activeRegisteration = null;
   navigator.serviceWorker.addEventListener('message', event => {
     // event is a MessageEvent object
     console.log(`The service worker sent me a message: ${event.data}`);
+	ScheduleUnityFunctionCall('MessageFromIndexTriggeredBySW');
   });
 
   navigator.serviceWorker.ready.then( registration => {
@@ -169,6 +170,19 @@ var activeRegisteration = null;
     registration.active.postMessage("hi service worker");
   });
 }
+
+function ScheduleUnityFunctionCall(message){
+if(gameInstance){
+gameInstance.SendMessage('FirebaseTest','PrintToken',message);
+}
+else{
+console.log('game instance is null. Rescheduling it.');
+        setTimeout(ScheduleUnityFunctionCall, 100, message);
+}
+
+}
+
+
 	</script>
 
 	
