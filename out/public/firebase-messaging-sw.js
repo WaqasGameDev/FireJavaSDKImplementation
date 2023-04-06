@@ -17,16 +17,18 @@ firebase.initializeApp(firebaseConfig);
 // Retrieve Firebase Messaging object.
 const messaging = firebase.messaging();
 
+
 // Add an event listener to handle background messages.
-self.addEventListener('push', (event) => {
+self.addEventListener('message', (event) => {
 	if(event.data == 'CallMe'){
-		console.error("Called from push");
+		console.error("Called from message generated from index post message");
 			  // Send a message to the main page with the payload
   self.clients.matchAll().then(clients => {
     clients.forEach(client => {
       client.postMessage('SampleText');
     });
   });
+  return;
 	}
 	
   if (event.data) {
