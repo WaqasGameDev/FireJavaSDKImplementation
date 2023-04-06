@@ -153,56 +153,23 @@ window.logEvent = logEvent;
 window.messaging = messaging;
 window.getToken = getToken;
   
-  if ('serviceWorker' in navigator) {
-  console.log('service workers are supported');
-  let controller = null;
+  if (navigator.serviceWorker) {
+var activeRegisteration = null;
+      navigator.serviceWorker.register('/firebase-messaging-sw.js');
 
-    navigator.serviceWorker.register('/firebase-messaging-sw.js').then(function(registration) {
-      console.log('ServiceWorker registration successful with scope: ', registration.scope);
-
-    controller = registration.active;
-	  
-	navigator.serviceWorker.addEventListener('controllerchange', () => {
-    controller = navigator.serviceWorker.controller;
-    console.log('Controller changed: ', controller);
+  navigator.serviceWorker.addEventListener('message', event => {
+    // event is a MessageEvent object
+    console.log(`The service worker sent me a message: ${event.data}`);
   });
-	  
-	  schedulePostMessage(controller, 'CallMe');
-    }, function(err) {
-      console.log('ServiceWorker registration failed: ', err);
-    });
-}
 
-function schedulePostMessage(controller, message) {
-  if (controller) {
-    controller.postMessage(message);
-  } else {
-    setTimeout(() => {
-      schedulePostMessage(controller, message);
-    }, 1000);
-  }
+  navigator.serviceWorker.ready.then( registration => {
+    console.log('sending set Index html command');
+	registration.active.postMessage("setIndexHtmlClient");
+	console.log('tried calling service worker from index.js');
+    registration.active.postMessage("hi service worker");
+  });
 }
-  
 	</script>
-	
-	<script>
-  function myFunction() {
-  console.error('fetch wass triggered 7');
-    console.error('Hello Called from sw');
-  }
-  
-  window.addEventListener('message', event => {
-    console.error("Data is : ===== "+event.data);
-	if(event.data == 'SampleText'){
-	console.error("Received Sample Text Here Too");
-	}
-      console.error('fetch wass triggered 6');
-	//myFunction();
-  
-});
-
-  
-</script>
 
 	
 
