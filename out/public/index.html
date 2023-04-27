@@ -122,7 +122,7 @@
 	// Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
 import { getAnalytics, setUserId, setUserProperties, setAnalyticsCollectionEnabled, logEvent} from "https://www.gstatic.com/firebasejs/9.18.0/firebase-analytics.js";
-import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-messaging.js"
+import { getMessaging, getToken, subscribeToTopic, unsubscribeFromTopic } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-messaging.js"
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -152,6 +152,8 @@ window.logEvent = logEvent;
 
 window.messaging = messaging;
 window.getToken = getToken;
+window.subscribeToTopic = subscribeToTopic;
+window.unsubscribeFromTopic = unsubscribeFromTopic;
   
   if (navigator.serviceWorker) {
 var activeRegisteration = null;
@@ -171,9 +173,14 @@ var activeRegisteration = null;
 
 function ScheduleUnityFunctionCall(message){
 if(gameInstance){
-gameInstance.SendMessage('FirebaseWebGLBridge','MessageTitleReceived', message.notification.title);
-gameInstance.SendMessage('FirebaseWebGLBridge','MessageBodyReceived', message.notification.body);
-gameInstance.SendMessage('FirebaseWebGLBridge','MessageDataReceived', message.notification.data);
+var messageObject = {
+    title: message.notification.title,
+    body: message.notification.body,
+    data: message.notification.data
+};
+
+var messageJsonString = JSON.stringify(messageObject);
+gameInstance.SendMessage('FirebaseWebGLBridge','MessageTitleReceived', messageJsonString);
 }
 else{
 console.log('game instance is null. Rescheduling it.');
