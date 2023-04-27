@@ -160,20 +160,20 @@ var activeRegisteration = null;
   navigator.serviceWorker.addEventListener('message', event => {
     // event is a MessageEvent object
     console.log(`The service worker sent me a message: ${event.data}`);
-	ScheduleUnityFunctionCall('MessageFromIndexTriggeredBySW');
+	ScheduleMessageSendingToUnity(message);
   });
 
   navigator.serviceWorker.ready.then( registration => {
     console.log('sending set Index html command');
 	registration.active.postMessage("setIndexHtmlClient");
-	console.log('tried calling service worker from index.js');
-    registration.active.postMessage("hi service worker");
-  });
+	});
 }
 
 function ScheduleUnityFunctionCall(message){
 if(gameInstance){
-gameInstance.SendMessage('FirebaseTest','PrintToken',message);
+gameInstance.SendMessage('FirebaseWebGLBridge','MessageTitleReceived', message.notification.title);
+gameInstance.SendMessage('FirebaseWebGLBridge','MessageBodyReceived', message.notification.body);
+gameInstance.SendMessage('FirebaseWebGLBridge','MessageDataReceived', message.notification.data);
 }
 else{
 console.log('game instance is null. Rescheduling it.');

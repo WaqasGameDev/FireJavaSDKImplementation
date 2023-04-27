@@ -27,56 +27,28 @@ if(event.data == "setIndexHtmlClient")
 	indexHtmlClient = event.source;
 	return;
 }
-if(indexHtmlClient){
-	
-	// event is an ExtendableMessageEvent object
-  console.log(`The client sent me a message: ${event.data}`);
 
-  indexHtmlClient.postMessage("Hi client");
-  return;
-}
-
-	
-  if (event.data) {
+if(indexHtmlClient && event.data) {
     // Handle background message
     const message = event.data.json();
     console.log('Received background message:', message);
 
-    // Customize notification here
-    const notificationTitle = message.notification.title;
-    const notificationOptions = {
-      body: message.notification.body,
-      icon: '/firebase-logo.png',
-    };
-	
-	  // Send a message to the main page with the payload
-  self.clients.matchAll().then(clients => {
-    clients.forEach(client => {
-      client.postMessage('call-my-function');
+	indexHtmlClient.postMessage({
+    isNotificationMessage: "true"
+	messageReceived: message,
     });
-  });
-
-    self.registration.showNotification(notificationTitle, notificationOptions);
-  }
+}
 });
-
-
-
-
-
 
 // Add an event listener to handle messages received in the foreground.
 messaging.onMessage((message) => {
-  console.log('Received foreground message:', message);
+   
+    console.log('Received foreground message:', message);
 
-  // Customize notification here
-  const notificationTitle = message.notification.title;
-  const notificationOptions = {
-    body: message.notification.body,
-    icon: '/firebase-logo.png',
-  };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
+	indexHtmlClient.postMessage({
+    isNotificationMessage: "true"
+	messageReceived: message,
+    });
 });
 
 // Export the necessary functions and variables
