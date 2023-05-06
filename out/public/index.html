@@ -23,7 +23,82 @@
         <div id="unity-build-title">FirebaseJavaSDKImplementation</div>
       </div>
     </div>
-    <script>
+
+<script type = "module">
+	
+	// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
+import { getAnalytics, setUserId, setUserProperties, setAnalyticsCollectionEnabled, logEvent} from "https://www.gstatic.com/firebasejs/9.18.0/firebase-analytics.js";
+import { getMessaging, getToken} from "https://www.gstatic.com/firebasejs/9.18.0/firebase-messaging.js"
+
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDa_VEU9wV7CBZgsWJ6v1Fba7KMV-gUY34",
+  authDomain: "fir-javascriptsdk.firebaseapp.com",
+  projectId: "fir-javascriptsdk",
+  storageBucket: "fir-javascriptsdk.appspot.com",
+  messagingSenderId: "743642467709",
+  appId: "1:743642467709:web:a24fca9b5d24f48313d014",
+  measurementId: "G-XP1Z9K22VR"
+};
+
+// Initialize Firebase Services
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const messaging = getMessaging(app);
+
+window.analytics = analytics;
+window.setUserId = setUserId;
+window.setUserProperties = setUserProperties;
+window.setAnalyticsCollectionEnabled = setAnalyticsCollectionEnabled;
+window.logEvent = logEvent;
+
+window.messaging = messaging;
+window.getToken = getToken;
+  
+  if (navigator.serviceWorker) {
+var activeRegisteration = null;
+      navigator.serviceWorker.register('/firebase-messaging-sw.js');
+
+  navigator.serviceWorker.addEventListener('message', event => {
+    // event is a MessageEvent object
+    
+	if(event.data.isNotificationMessage){
+	console.log(`The service worker sent me a message: ${event.data}`);
+	ScheduleMessageSendingToUnity(event.data.messageReceived);
+	}
+  });
+
+  navigator.serviceWorker.ready.then( registration => {
+    console.log('sending set Index html command');
+	registration.active.postMessage("setIndexHtmlClient");
+	});
+}
+
+function ScheduleUnityFunctionCall(message){
+if(gameInstance){
+var messageObject = {
+    title: message.notification.title,
+    body: message.notification.body,
+    data: message.notification.data
+};
+
+var messageJsonString = JSON.stringify(messageObject);
+gameInstance.SendMessage('FirebaseWebGLBridge','MessageTitleReceived', messageJsonString);
+}
+else{
+console.log('game instance is null. Rescheduling it.');
+        setTimeout(ScheduleUnityFunctionCall, 100, message);
+}
+
+}
+
+	
+	
       var container = document.querySelector("#unity-container");
       var canvas = document.querySelector("#unity-canvas");
       var loadingBar = document.querySelector("#unity-loading-bar");
@@ -118,79 +193,7 @@
       document.body.appendChild(script);
     </script>
 	
-	<script type = "module">
-	// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js";
-import { getAnalytics, setUserId, setUserProperties, setAnalyticsCollectionEnabled, logEvent} from "https://www.gstatic.com/firebasejs/9.18.0/firebase-analytics.js";
-import { getMessaging, getToken, subscribeToTopic, unsubscribeFromTopic } from "https://www.gstatic.com/firebasejs/9.18.0/firebase-messaging.js"
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDa_VEU9wV7CBZgsWJ6v1Fba7KMV-gUY34",
-  authDomain: "fir-javascriptsdk.firebaseapp.com",
-  projectId: "fir-javascriptsdk",
-  storageBucket: "fir-javascriptsdk.appspot.com",
-  messagingSenderId: "743642467709",
-  appId: "1:743642467709:web:a24fca9b5d24f48313d014",
-  measurementId: "G-XP1Z9K22VR"
-};
-
-// Initialize Firebase Services
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const messaging = getMessaging(app);
-
-window.analytics = analytics;
-window.setUserId = setUserId;
-window.setUserProperties = setUserProperties;
-window.setAnalyticsCollectionEnabled = setAnalyticsCollectionEnabled;
-window.logEvent = logEvent;
-
-window.messaging = messaging;
-window.getToken = getToken;
-window.subscribeToTopic = subscribeToTopic;
-window.unsubscribeFromTopic = unsubscribeFromTopic;
-  
-  if (navigator.serviceWorker) {
-var activeRegisteration = null;
-      navigator.serviceWorker.register('/firebase-messaging-sw.js');
-
-  navigator.serviceWorker.addEventListener('message', event => {
-    // event is a MessageEvent object
-    console.log(`The service worker sent me a message: ${event.data}`);
-	ScheduleMessageSendingToUnity(message);
-  });
-
-  navigator.serviceWorker.ready.then( registration => {
-    console.log('sending set Index html command');
-	registration.active.postMessage("setIndexHtmlClient");
-	});
-}
-
-function ScheduleUnityFunctionCall(message){
-if(gameInstance){
-var messageObject = {
-    title: message.notification.title,
-    body: message.notification.body,
-    data: message.notification.data
-};
-
-var messageJsonString = JSON.stringify(messageObject);
-gameInstance.SendMessage('FirebaseWebGLBridge','MessageTitleReceived', messageJsonString);
-}
-else{
-console.log('game instance is null. Rescheduling it.');
-        setTimeout(ScheduleUnityFunctionCall, 100, message);
-}
-
-}
-
-
-	</script>
 
 	
 

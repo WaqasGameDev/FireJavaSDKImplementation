@@ -34,8 +34,8 @@ if(indexHtmlClient && event.data) {
     console.log('Received background message:', message);
 
 	indexHtmlClient.postMessage({
-    isNotificationMessage: "true"
-	messageReceived: message,
+    isNotificationMessage: "true",
+	messageReceived: message
     });
 }
 });
@@ -46,8 +46,8 @@ messaging.onMessage((message) => {
     console.log('Received foreground message:', message);
 
 	indexHtmlClient.postMessage({
-    isNotificationMessage: "true"
-	messageReceived: message,
+    isNotificationMessage: "true",
+	messageReceived: message
     });
 });
 
