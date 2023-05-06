@@ -182,6 +182,7 @@ console.log('game instance is null. Rescheduling it.');
           progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
 		gameInstance = unityInstance;
+		window.gameInstance = gameInstance;
 	loadingBar.style.display = "none";
           fullscreenButton.onclick = () => {
             unityInstance.SetFullscreen(1);
